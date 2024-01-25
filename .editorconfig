@@ -1,0 +1,13 @@
+root = true
+
+charset = utf-8
+tab_width = 4
+indent_style = space
+indent_size = tab
+insert_final_newline = true
+
+[*.rs]
+indent_size = 4
+
+[*.{yml,yaml}]
+indent_size = 2
