@@ -12,3 +12,4 @@ clap = { version = "4", features = ["derive", "color", "suggestions"] }
 anyhow = "1"
 derive-getters = "0.3"
 log = "0.4.20"
+regex = "1"
