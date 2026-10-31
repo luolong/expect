@@ -1,0 +1,17 @@
+# Numeric token patterns.
+#
+# Each entry maps a token name to the regular expression fragment that matches a
+# value of that type. Use a token as <NAME> in a pattern. The whole line must
+# match, so fragments need no anchors of their own.
+#
+# Names are matched case-insensitively. `<...>` that is not a name in any loaded
+# file is literal text. `<_>` is always the wildcard and is not defined here.
+#
+# Fragments are TOML literal strings (single-quoted), so backslashes are written
+# as-is rather than doubled.
+
+[tokens]
+INT = '[+-]?\d+'
+NUM = '[+-]?\d+(?:\.\d+)?'
+HEX = '[0-9A-Fa-f]+'
+PORT = '\d{1,5}'

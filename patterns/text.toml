@@ -1,0 +1,4 @@
+# General text token patterns.
+
+[tokens]
+WORD = '\S+'

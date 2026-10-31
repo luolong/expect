@@ -1,0 +1,7 @@
+# Identifier and digest token patterns.
+
+[tokens]
+UUID = '[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}'
+MD5 = '[0-9A-Fa-f]{32}'
+SHA1 = '[0-9A-Fa-f]{40}'
+SHA256 = '[0-9A-Fa-f]{64}'
