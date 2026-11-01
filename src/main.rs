@@ -5,11 +5,13 @@ use std::path::PathBuf;
 use anyhow::Context;
 use clap::Parser;
 
+use crate::align::Aligner;
 use crate::ansi::strip;
 use crate::library::Library;
-use crate::matcher::{Matcher, Strategy};
+use crate::matcher::Strategy;
 use crate::options::Options;
 
+mod align;
 mod ansi;
 mod datetime;
 mod library;
@@ -72,28 +74,25 @@ fn filter_matching_lines(
 ) -> anyhow::Result<()> {
     let mut out = stdout().lock();
 
-    let mut expected_lines = expected_input
+    let expected = expected_input
         .lines()
         .map_while(Result::ok)
         .map(|line| strategy.compile(&strip(&line), library))
-        .collect::<anyhow::Result<Vec<_>>>()?
-        .into_iter();
+        .collect::<anyhow::Result<Vec<_>>>()?;
 
-    let mut expect_next: Option<Box<dyn Matcher>> = expected_lines.next();
+    let mut aligner = Aligner::new(expected);
 
     for actual_line in stdin().lines().map_while(Result::ok) {
-        if let Some(expected_line) = &expect_next {
-            if cfg!(debug_assertions) {
-                eprintln!(
-                    "Comparing: '{}' <=> '{actual_line}'",
-                    expected_line.expected()
-                )
-            }
+        let stripped = strip(&actual_line);
 
-            if expected_line.matches(&strip(&actual_line)) {
-                expect_next = expected_lines.next();
-                continue;
+        if cfg!(debug_assertions) {
+            if let Some(expected) = aligner.current() {
+                eprintln!("Comparing: '{expected}' <=> '{actual_line}'");
             }
+        }
+
+        if aligner.consume(&stripped) {
+            continue;
         }
 
         writeln!(out, "{actual_line}")?;
